@@ -1,0 +1,62 @@
+{
+  "benchmark_timestamp": "2026-11-20T04:08:02Z",
+  "overall_status": "PASSED",
+  "metrics": {
+    "incident_recall": "3 / 3 (100.0%)",
+    "incident_recall_pct": 100.0,
+    "alert_compression_pct": 90.6,
+    "verifier_precision_pct": 100.0,
+    "evidence_traceability_pct": 100.0,
+    "sea_case_a_passed": true,
+    "sea_case_b_passed": true,
+    "fail_open_passed": true,
+    "pipeline_latency_ms": {
+      "p50": 119.72,
+      "p95": 120.5,
+      "min": 7.44,
+      "max": 120.5
+    }
+  },
+  "per_incident_breakdown": [
+    {
+      "scenario_key": "scenario_1_postgres_cascade",
+      "scenario_name": "Postgres Lock Contention & Connection Exhaustion Cascade",
+      "expected_verdict": "VERIFIED_INCIDENT",
+      "detected_verdict": "VERIFIED_INCIDENT",
+      "expected_root_cause": "orders-postgres-primary",
+      "detected_root_cause": "orders-postgres-primary",
+      "latency_ms": 120.5,
+      "passed": true
+    },
+    {
+      "scenario_key": "scenario_2_benign_backup",
+      "scenario_name": "Nightly 02:00 pg_dump Backup (Case A - Same Symptom, Same Benign Context)",
+      "expected_verdict": "SUPPRESSED_NOISE",
+      "detected_verdict": "SUPPRESSED_NOISE",
+      "historical_match_id": "CASE-HIST-001",
+      "context_divergence_detected": false,
+      "latency_ms": 7.44,
+      "passed": true
+    },
+    {
+      "scenario_key": "scenario_3_context_divergence",
+      "scenario_name": "Midday Lock Spike (Case B - Same Symptom, Divergent Context)",
+      "expected_verdict": "VERIFIED_INCIDENT",
+      "detected_verdict": "VERIFIED_INCIDENT",
+      "context_divergence_detected": true,
+      "maker_checker_status": "OVERRIDDEN_BY_DIVERGENCE",
+      "latency_ms": 11.04,
+      "passed": true
+    },
+    {
+      "scenario_key": "fail_open_outage_simulation",
+      "scenario_name": "Simulated AI Layer Outage with Critical Deterministic DB Breach",
+      "expected_verdict": "FAIL_OPEN_CRITICAL",
+      "detected_verdict": "FAIL_OPEN_CRITICAL",
+      "deterministic_severity": "CRITICAL",
+      "confidence": 1.0,
+      "latency_ms": 119.72,
+      "passed": true
+    }
+  ]
+}

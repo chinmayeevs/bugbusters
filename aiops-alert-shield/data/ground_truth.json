@@ -1,0 +1,50 @@
+{
+  "scenarios": {
+    "scenario_1_postgres_cascade": {
+      "name": "Postgres Lock Contention & Connection Exhaustion Cascade",
+      "window": {
+        "start": "2026-11-19T14:15:00Z",
+        "end": "2026-11-19T14:30:00Z"
+      },
+      "expected_verdict": "VERIFIED_INCIDENT",
+      "expected_root_cause": "orders-postgres-primary",
+      "expected_severity": "CRITICAL",
+      "expected_causal_chain": [
+        "orders-postgres-primary",
+        "checkout-api",
+        "api-gateway"
+      ],
+      "expected_context_divergence": false,
+      "min_compression_ratio": 0.85
+    },
+    "scenario_2_benign_backup": {
+      "name": "Nightly 02:00 pg_dump Backup (Case A - Same Symptom, Same Benign Context)",
+      "window": {
+        "start": "2026-11-19T02:00:00Z",
+        "end": "2026-11-19T02:15:00Z"
+      },
+      "expected_verdict": "SUPPRESSED_NOISE",
+      "expected_root_cause": "orders-postgres-primary",
+      "expected_historical_match": "CASE-HIST-001",
+      "expected_context_divergence": false
+    },
+    "scenario_3_context_divergence": {
+      "name": "Midday Lock Spike (Case B - Same Symptom, Divergent Context)",
+      "window": {
+        "start": "2026-11-19T14:15:00Z",
+        "end": "2026-11-19T14:30:00Z"
+      },
+      "expected_verdict": "VERIFIED_INCIDENT",
+      "expected_root_cause": "orders-postgres-primary",
+      "expected_historical_match": "CASE-HIST-001",
+      "expected_context_divergence": true,
+      "divergence_trigger": "Downstream latency spike and non-maintenance midday time window"
+    },
+    "scenario_4_transient_flap": {
+      "name": "Redis Heartbeat Flapping Noise",
+      "expected_verdict": "SUPPRESSED_NOISE",
+      "expected_root_cause": "redis-cache",
+      "is_flapping": true
+    }
+  }
+}

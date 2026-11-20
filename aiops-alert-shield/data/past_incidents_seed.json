@@ -1,0 +1,52 @@
+[
+  {
+    "case_id": "CASE-HIST-001",
+    "symptom_signature": "orders-postgres-primary:high_cpu:lock_contention",
+    "title": "Nightly Automated Backup pg_dump Maintenance",
+    "category": "MAINTENANCE_SCHEDULED",
+    "historical_outcome": "BENIGN_NOISE",
+    "context_conditions": {
+      "time_window": "02:00-03:00 UTC",
+      "cron_job_active": "pg_dump_nightly",
+      "downstream_latency_spike": false,
+      "error_rate_spike": false,
+      "customer_impact": false
+    },
+    "remediation_recommendation": "Suppress alert if executed during scheduled 02:00 maintenance window with 0 downstream error rate.",
+    "verified_by": "lead-sre-alice",
+    "version": 1
+  },
+  {
+    "case_id": "CASE-HIST-002",
+    "symptom_signature": "orders-postgres-primary:high_cpu:lock_contention",
+    "title": "Unindexed Table Lock Contention on orders_v2 during Flash Sale",
+    "category": "DATABASE_OUTAGE",
+    "historical_outcome": "VERIFIED_INCIDENT",
+    "context_conditions": {
+      "time_window": "14:00-16:00 UTC",
+      "cron_job_active": null,
+      "downstream_latency_spike": true,
+      "error_rate_spike": true,
+      "customer_impact": true
+    },
+    "remediation_recommendation": "Kill blocking transaction PID with pg_terminate_backend; scale connection pool.",
+    "verified_by": "staff-dba-bob",
+    "version": 1
+  },
+  {
+    "case_id": "CASE-HIST-003",
+    "symptom_signature": "redis-cache:connection_jitter:flapping",
+    "title": "Transient Kubernetes Node Rotation Redis Flap",
+    "category": "NETWORK_FLAP",
+    "historical_outcome": "BENIGN_NOISE",
+    "context_conditions": {
+      "duration_seconds": "<120",
+      "downstream_latency_spike": false,
+      "error_rate_spike": false,
+      "customer_impact": false
+    },
+    "remediation_recommendation": "Deduplicate and suppress flapping Redis heartbeat alerts under 2 minutes.",
+    "verified_by": "infra-sre-carol",
+    "version": 1
+  }
+]
